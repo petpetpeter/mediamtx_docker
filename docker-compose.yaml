@@ -1,0 +1,24 @@
+services:
+  mediamtx:
+    container_name: mediamtx
+    image: bluenviron/mediamtx:latest-ffmpeg
+    restart: unless-stopped
+    network_mode: "host"
+    # volumes:
+    #   - $PWD/conf:/conf:ro
+    # command: /conf/mediamtx.yml
+
+  ffmpeg:
+    container_name: b2c-ffmpeg
+    image: jrottenberg/ffmpeg
+    #tty: true
+    # networks:
+    #   - b2c
+    # ports:
+    #   - "29002:29000"
+    network_mode: "host"
+    tty: true
+    volumes:
+      - $PWD/input_video1.mp4:/tmp/workdir/input_video1.mp4
+    entrypoint: ["bash", "-c", "ffmpeg -re -stream_loop -1 -i input_video1.mp4 -c copy -f rtsp rtsp://localhost:8554/mystream"]
+    
